@@ -1,6 +1,7 @@
 import express from "express"
 import User from "../db/Schema/userSchema.js"
 import Product from "../db/Schema/productSchema.js"
+import Order from "../db/Schema/orderSchema.js"
 import bcrypt from "bcrypt"
 import jwt  from "jsonwebtoken"
 
@@ -14,7 +15,7 @@ router.post("/user/signup",async(req,res)=>{
     const body =req.body
     console.log(req.body)
 
-    const user=await Admin.findOne({username:body.username})
+    const user=await User.findOne({username:body.username})
     if(user){
        return res.status(403).json({message:"Username already taken"})
     }
@@ -57,6 +58,27 @@ router.post("/user/login",async(req,res)=>{
     catch(e){
         res.status(500).json({error:e.message})
     }
+})
+
+router.get("/user/order/:id",async(req,res)=>{
+
+    try{
+        const id=req.params.id
+        const orders= await Order.find({userId:id})
+
+        res.status(200).json(orders)
+
+    }
+
+
+
+
+
+
+
+        catch(e){
+            res.status(500).json({error:e.message})
+        }
 })
 
 
